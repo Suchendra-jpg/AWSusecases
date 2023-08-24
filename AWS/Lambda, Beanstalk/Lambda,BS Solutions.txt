@@ -1,0 +1,118 @@
+Assignment 1:
+
+1) Create a standard SQS queue with name 'myqueueforlambda'.
+
+2) Create an Lambda function with 'Python 3.x' runtime and name 'functrigsqs'.
+
+3) And also attach a role  'sqsrole' with "Amazon SQS poller permissions".
+
+4) After creating the function add SQS trigger for 'myqueueforlambda'.
+
+5) Paste the below code in "lambda_function.py" file and deploy.
+
+import json
+
+def lambda_handler(event, context):
+    # Extracting the message body from the event
+    records = event.get('Records', [])
+    if not records:
+        print("No records found in the event.")
+        return {
+            'statusCode': 200,
+            'body': json.dumps('No records found in the event.')
+        }
+    
+    message_body = records[0].get('body')
+    if not message_body:
+        print("No message body found in the record.")
+        return {
+            'statusCode': 200,
+            'body': json.dumps('No message body found in the record.')
+        }
+    
+    if not message_body.strip():
+        print("Empty message body.")
+        return {
+            'statusCode': 200,
+            'body': json.dumps('Empty message body.')
+        }
+    
+    try:
+        # Parsing the JSON message body
+        message = json.loads(message_body)
+    except json.JSONDecodeError as e:
+        print(f"Failed to decode message body: {e}")
+        return {
+            'statusCode': 200,
+            'body': json.dumps('Failed to decode message body.')
+        }
+    
+    # Processing the message
+    name = message.get('name')
+    age = message.get('age')
+    
+    if not name or not age:
+        print("Invalid message format.")
+        return {
+            'statusCode': 200,
+            'body': json.dumps('Invalid message format.')
+        }
+    
+    # Printing the message details
+    print(f"Received message from {name} with age {age}")
+    
+    # You can perform any desired operations on the message here
+    
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Message processed successfully')
+    }
+
+6) Navigate to SQS queue created and send message with below Message body:
+
+{
+  "name": "Alice",
+  "age": 25
+}
+
+7) Navigate to Lambda and follow below steps to view logs:
+
+->Monitor -> View Cloudwatch logs -> Select log group "aws/lambda/functrigsqs" -> Log streams -> Select appropriate log event to verify.
+
+8) Output will be 'Received message from Alice with age 25' as seen in log event.
+
+
+Assignment 2:
+
+Steps to create an Elastic Beanstalk environment with PHP runtime and upload a simple PHP file to it:
+
+1. Create an Elastic Beanstalk environment with PHP runtime:
+   - Sign in to the AWS Management Console.
+   - Go to the Elastic Beanstalk service.
+   - Click on "Create environment".
+   - Choose "Web server environment".
+   - Select "PHP" as the platform.
+   - Provide a unique environment name.
+   - Configure any additional options you need (e.g., instance type, capacity, security settings).
+   - Click on "Create environment".
+
+2. Upload a simple PHP file to the environment:
+   - Create a new PHP file or use an existing one that you want to upload.
+   - Navigate to the Elastic Beanstalk service in the AWS Management Console.
+   - Select your environment from the list.
+   - Click on the "Upload and Deploy" button.
+   - Choose the PHP file you want to upload.
+   - Click on "Deploy".
+
+ Elastic Beanstalk will handle the deployment process and automatically provision the necessary resources to run your PHP application.
+ Once the deployment is complete, you should be able to access your PHP file through the environment's URL or endpoint.
+
+3. index.php
+
+<?php
+    // Simple PHP script to display "Hello, Elastic Beanstalk!"
+    echo "Hello, Elastic Beanstalk!";
+?>
+
+
+Assignment 3 (Opsworks) -> No classes conducted for this topic as the service will not be supported by AWS as told by instructor. Therefore not doing assignmnet 3.

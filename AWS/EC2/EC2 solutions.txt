@@ -1,0 +1,74 @@
+Assignment 1 Solution:
+
+1) Create an EC2 instance in specified region and do not forget to allow SSH,HTTP protocols as these are required security groups for further operations.
+
+2) sudo apt-get update
+
+3) sudo apt-get install nginx
+ 
+4) To verify that we have sucessfully installed nginx, copy Public IPv4 address(44.202.146.151) under "Details" tab and paste in chrome.
+
+5) cd var/www/html
+
+6) ls -l
+
+7) sudo nano index.nginx-debian.html
+
+8) Edit the html file to display desired content and check the IP address if that's reflecting appropriate content
+													OR
+9) sudo rm index.nginx-debian.html
+   sudo nano index.html with below code and provide required permissions.
+   <html>
+   <h1> Hello World </h1>
+   </html>
+   
+10) Refresh the page to see contents in index.html in your web browser.
+
+
+Assignment 2 Solution:
+
+1) Launch an EC2 instance in an AZ.
+
+2) Create an EBS volume of required capacity in same AZ as created EC2 instance.
+
+3) Attach created volume to appropriate EC2 instance and verify the same under "Storage" tab by slecting EC2 instance.
+
+4) Select Modify volume option in Actions dropdownbox to edit the size of created volume.(You can only increase volume)
+
+
+Assignment 3 Solution:
+
+1) Create multiple EC2 instances with different OS as required by adding SSH,HTTP and NFS as required security groups(Task3reqSG).
+
+2) Create an EFS storage and under "Network acess" tab make sure security group(Task3reqSG) is selected for all "Mount targets".
+
+3) Launch all the instances and follow below steps:
+
+   sudo apt-get install nfs-common (or) sudo yum install nfs-utils
+   
+   sudo mkdir efs
+   
+   sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-060bf7ae1234103e1.efs.us-east-1.amazonaws.com:/ efs
+   (The above command is available when you navigate inside created EFS and click on "Attach" button)
+   
+   cd efs
+   
+   sudo nano testmount.txt
+   (Try the above command in any one EC2 instance and check in another EC2 instance if the file is created)
+   
+   
+Case Study Solution:
+
+1) Launch an EC2 instance in N-virginia region with linux O/S with appropriate configuration.
+
+2) Create an image of the launced instance.
+
+3) The image created in above step will be availavble in 'AMI's' under "Images".
+
+4) Navigate to created AMI and click on 'Copy AMI' to copy AMI to desired region(Oregon region).
+
+5) Build two EBS volumes and attach them to the instance in us-east-1 (N. Virginia) region.
+
+6) Delete one volume after detaching it and extend the size of other volume.
+
+7) Take backup of the EBS volume  using "Snapshots" which will be stored in an S3 bucket.

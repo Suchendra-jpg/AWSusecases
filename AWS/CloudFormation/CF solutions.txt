@@ -1,0 +1,110 @@
+Assignment 1 solution:
+
+1)CF template in YAML.
+
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  MyS3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: "intellipaatsuchendra"
+      VersioningConfiguration:
+        Status: "Enabled"
+	
+2) Also create appropriate role so that CF can create an S3 bucket and enable versioning.
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:CreateBucket",
+        "s3:PutBucketVersioning"
+      ],
+      "Resource": "arn:aws:s3:::intellipaatsuchendra"
+    }
+  ]
+}
+
+
+Assignment 2 solution:
+
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  MyVPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: "10.0.0.0/16"
+      Tags:
+        - Key: Name
+          Value: MyVPC
+  MySubnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: "10.0.0.0/24"
+      Tags:
+        - Key: Name
+          Value: MySubnet
+  MyInstance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: "ami-022e1a32d3f742bd8"  
+      InstanceType: "t2.micro"
+      SubnetId: !Ref MySubnet
+      Tags:
+        - Key: Name
+          Value: CFinstance
+
+
+Assignment 3 solution: [SNS didn't work]
+
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  MyS3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: "intellipaatsuchendra"
+
+  MySNSTopic:
+    Type: "AWS::SNS::Topic"
+    Properties:
+      DisplayName: "CloudFormationStackNotifications"
+      Subscription:
+        - Protocol: email
+          Endpoint: "mcsuchendra@gmail.com"
+
+  MyBucketPolicy:
+    Type: "AWS::S3::BucketPolicy"
+    Properties:
+      Bucket: !Ref MyS3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "S3BucketNotification"
+            Effect: "Allow"
+            Principal: "*"
+            Action: "s3:PutObject"
+            Resource: !Sub "arn:aws:s3:::${MyS3Bucket}/*"
+            Condition:
+              ArnLike:
+                aws:SourceArn: !Ref MySNSTopic
+
+
+Assignment 4 solution:
+
+SQS
+1) Create a FIFO SQS with name 'Assignmentfour.fifo'
+
+2) Try sending a message by filling out required fields and passing GroupID as attribute.
+
+3) After that poll for the messages so that you can see message body,attributes and details.
+
+SES
+1) Create an identity by giving e-mail id and verifying the same.
+
+2) After verification you can send out an test email to your address using e-mail address available based on requirements.
+
+3) You can see the e-mail in your verified mail address.

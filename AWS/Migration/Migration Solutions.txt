@@ -1,0 +1,130 @@
+
+Assignment 2:
+
+1) Commands to enable ssh and open port 22  for CentOS(cloudops) are:
+
+    ls
+	sudo yum update
+	sudo yum -y install openssh-server openssh-clients
+	sudo systemctl start sshd
+	sudo systemctl enable sshd
+	sudo systemctl status sshd
+	chkconfig sshd on
+	service sshd start
+	netstat -tulpn|grep :22
+	
+2) Create an S3 bucket where we can upload extracted VM.
+
+3) Create a role with below custom trust policy and "EC2FullAccess" & "S3FullAccess"
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Statement1",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "vmie.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+}
+
+4) container.json                             (C:\Users\LENOVO\Desktop\container.json)
+
+[
+{
+"Description":"CentOS8",
+"Format":"vmdk",
+"UserBucket":
+{
+"S3Bucket":"assignment10vm",
+"S3Key":"CentOS8-disk002.vmdk"
+}
+}
+]
+	
+5) aws ec2 import-image --disk-containers "file://C:\Users\LENOVO\Desktop\container.json" --role Assignment10role
+
+6) aws ec2 describe-import-image-tasks --import-task-ids "import-ami-02187336789175c1f"
+
+Output:
+{
+    "ImportImageTasks": [
+        {
+            "Architecture": "x86_64",
+            "ImportTaskId": "import-ami-02187336789175c1f",
+            "LicenseType": "BYOL",
+            "Platform": "Linux",
+            "Progress": "39",
+            "SnapshotDetails": [
+                {
+                    "Description": "CentOS8",
+                    "DeviceName": "/dev/sda1",
+                    "DiskImageSize": 4901848576.0,
+                    "Format": "VMDK",
+                    "Status": "completed",
+                    "UserBucket": {
+                        "S3Bucket": "assignment10vm",
+                        "S3Key": "CentOS8-disk002.vmdk"
+                    }
+                }
+            ],
+            "Status": "active",
+            "StatusMessage": "booting",
+            "Tags": [],
+            "BootMode": "legacy_bios"
+        }
+    ]
+}
+
+7) After the above task is completed you can see AMI created in AWS .Using it launch an EC2 instance and verify by foll. below steps:
+
+	ssh -i "vm-kp.pem" root@ec2-52-201-218-15.compute-1.amazonaws.com
+	cd /home/cloudops
+	ls
+
+
+Assignment 3:
+
+1) Create an RDS MySQL database with easy create with following creds: (Public access:NO [by default])
+
+	name:database-1
+	uname:admin
+	passwd:admin123
+	
+2) Add MySQL/Aurora rule in SG of the database instance which will allow access to port 3306.
+
+3) Using an sql client connect with the database created or you can also connect from an ec2 instance.
+
+	sudo su
+	apt-get update
+	apt-get install mysql-client -y
+	mysql -h database-1.cuzlimo9s12x.us-east-1.rds.amazonaws.com -u admin -padmin123
+	
+4) After establishing connection with database follow below steps:
+
+	show databases;
+	create database sample;
+	use sample;
+	create table student(id int,name varchar(20));
+	insert into student values(12,"sachin");
+	
+5) Create an RDS PostgreSQL database with easy create with following creds: (Public access:NO [by default])
+
+	name:database-2
+	uname:postgresql
+	passwd:suchendra
+	
+6) Create a "Replication instance" using DMS service to perform the migration .
+
+7) Create source and target endpoints under "Endpoints" service provided by DMS.
+
+8) Test endpoint connection for both source and target db's.
+
+9) Please allow PostgreSQL rules in SG of database-2 so that port 5432 can be accessed.
+
+10) Create a "Database migration task" to perform migration of database instances.
+
+11) Once task is completed, we will be able to access database-2 and can verify that it contains data stored in database-1.

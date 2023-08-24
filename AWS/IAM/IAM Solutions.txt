@@ -1,0 +1,71 @@
+Assignment 1 solution:
+
+1) Create 4 users as per problem statement with below names and passwords:
+	Dev1->developer@1
+	Dev2->developer@2
+	Test1->tester@1
+	Test2->tester@2
+	
+2) Create group 'Dev_Team' and add 'Dev1' and 'Dev2' usrers.
+
+3) Create group 'Ops_Team' and add 'Dev1','Test1' and 'Test2' users.
+
+
+Assignment 2 solution:
+
+1) Create a policy with name 'Policy1' for full access of S3 and RDS, but we have to give limited access just to create an EC2 instance.
+
+2) Therefore only give access to below actions:(EC2)
+
+	a) tag->DescribeTags;CreateTags
+	b) images->DescribeImages
+	c) instancetype->DescribeInstanceTypes
+	d) key->CreateKeyPair;DescribeKeyPairs
+	e) vpc->DescribeVpcs
+	f) subnet->DescribeSubnets
+	g) securitygroup->DescribeSecurityGroups;DescribeSecurityGroupRules
+	h) volumes->DescribeVolumes;CreateVolume;AttachVolume
+	i) interface->DescribeNetworkInterfaces;CreateNetworkInterface;AttachNetworkInterface
+	j) instance->RunInstances
+	
+3) Attach the above created policy to 'Dev_Team' group.
+
+4) You can confirm that policy is working by logging into aws console with 'Dev1' credentials and launching an ec2 instance.
+
+5) Create a policy named 'Policy2' for full access of Cloudwatch and Billing, only allowing all the list actions for EC2 and S3 resources.(Divide policy into 2-a & 2-b)
+
+6) Attach the above created policy to 'Ops_Team' group.
+
+7) You can confirm that policy is working by logging into aws console with 'Dev1' credentials and checking above provided access.
+
+
+Assignment 3 solution:
+
+1) Create a role using ARN of 'Dev1' and 'Dev2' users by defining them in trust policy defined below.
+
+2) Custom trust policy for above role would be:
+
+	{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "Statement1",
+			"Effect": "Allow",
+			"Principal": {
+			    "AWS":["arn:aws:iam::094838594048:user/Dev1","arn:aws:iam::094838594048:user/Dev2"]
+			},
+			"Action": "sts:AssumeRole"
+		}
+	]
+}
+
+3) Then attach permission policies i.e, 'AmazonDynamoDBFullAccess' and 'AmazonVPCFullAccess' and create a role with name 'DynamoVPC'.
+
+4) To verify if the role defined is functioning as expected log into console with Dev1 or Dev2 creds.
+
+5) After logging in switch to 'DynamoVPC' role and try creating a table in dynamodb if you are able to create it succesfully then it's working as expected.
+
+->Only Dev1 and Dev2 can switch to DynamoVPC role as defined in trust policy.
+->This is a temporary access given to users and can only be accessed by switching to appropriate role defined.
+->After switching to particular role the users will only be authorized to access resources defined in that particular role.
+->They will not be able to access resources defined in policies which were previously attached to groups of the users.

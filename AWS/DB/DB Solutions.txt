@@ -1,0 +1,51 @@
+Assignment 1 solution:
+
+1) Create an MariaDB database using Relational Database Service(RDS) by filling out all necessary details required to create a database.
+
+2) To connect to this database using 'MySQL Workbench/Dbeaver' as a SQL Client using windows:
+	a) Copy paste the database endpoint under 'Server Host' and also fill out 'username' and 'password' appropriately.
+	b) Do not forget to add 'MySQL/Aurora' inbound rule in SG of database.
+	c) Make sure database created is 'Public' so that you can access this from outside VPC or from different AZ's.
+
+3) To connect to this database using an EC2 instance:
+	a) Make sure that 'MySQL/Aurora' rule is added in SG of the instance.
+	b) sudo su
+	c) apt-get update
+	d) apt-get install mysql-client -y
+	e) mysql -h database-1.cuzlimo9s12x.us-east-1.rds.amazonaws.com -u admin -padmin123
+	f) show databases;
+	
+	
+Assignment 2 solution:
+
+1) Create an Aurora Database using RDS by filling out all necessary details required to create a database.
+
+2) Make sure database created is 'Public' so that you can access this from outside VPC or from different AZ's.
+
+3) "Availablity & Durablity" -> 'Multi-AZ Deployment' -> Create an Aurora replica.(select) -> Create database.
+
+4) Do not forget to add 'MySQL/Aurora' inbound rule in SG of database.
+
+5) After successful creation of database we will have:
+	a) A primary db instance in AZ-1.
+	b) A Reader instance in AZ-2.
+	c) A Writer instance in AZ-3.
+	
+6) All these instances will have their own database endpoints for access and to perform specific functionalities as per build.
+
+7) We can either use an ec2 instance or Dbeaver for connection. 
+
+
+Assignment 3 solution:
+
+1) Create a dynamoDb database with a table which contains a Partition Key.
+
+2) Add 5 records/items to above created table.
+
+3) Navigate to "Backups" under DynamoDB options and create backup of the database created above.
+
+4) After backing up data you can go ahead and delete the table created in Step 1.
+
+5) Using backup created restore the table by selecting backup and clicking on "Restore".
+
+6) After successful restoration we will be able to see all 5 records/items that was added while creating the  table inside restored table.

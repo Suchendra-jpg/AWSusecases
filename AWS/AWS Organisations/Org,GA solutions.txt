@@ -1,0 +1,84 @@
+Assignment 1:
+
+To create an AWS Organization and set up three Organization Units (OUs) with a service control policy limiting access to EC2, you can follow these steps:
+
+Step 1:Create an AWS organisation.
+
+a. Sign in to the AWS Management Console with your AWS account root credentials.
+b. Open the AWS Organizations console at https://console.aws.amazon.com/organizations/.
+c. Choose "Create organization."
+d. Follow the on-screen instructions to set up your organization, including providing an email address for the management account.
+e. Choose "Create organization" to complete the process.
+
+Step 2: Create Organization Units (OUs)
+
+a. Sign in to the AWS Management Console with your AWS account root credentials.
+b. Open the AWS Organizations console at https://console.aws.amazon.com/organizations/.
+c. In the navigation pane, choose "Organize accounts," and then choose "Create OU."
+d. Enter a name for the OU, such as OU1, OU2, or OU3, and choose "Create."
+
+Repeat the above steps to create the other two OUs (OU2 and OU3) with their respective names.
+
+Step 3: Attach a Service Control Policy (SCP)
+
+1. Sign in to the AWS Management Console with the credentials of an AWS Identity and Access Management (IAM) user with administrative access to the AWS Organization.
+2. Open the AWS Organizations console at https://console.aws.amazon.com/organizations/.
+3. In the navigation pane, choose "Policies," and then choose "Create policy."
+4. In the "Create policy" page, select "Service control policy" and choose "Next."
+5. Provide a name and description for the policy.
+6. Under "Policy syntax," choose "Visual editor."
+7. In the visual editor, choose "Add service" and select "EC2."
+8. Configure the desired permissions for EC2 by allowing or denying specific actions.
+9. Once you have defined the EC2 permissions, choose "Add statement."
+10. Review the policy and choose "Create policy."
+
+Step 4: Attach the SCP to the OUs
+
+1. In the AWS Organizations console, choose "Organize accounts."
+2. Select the OU to which you want to attach the SCP (e.g., OU1).
+3. In the details pane, choose the "Policies" tab.
+4. Choose "Attach policy."
+5. Select the SCP you created in Step 3 and choose "Attach."
+
+Repeat these steps for the remaining OUs (OU2 and OU3) to attach the same SCP to each OU.
+
+
+Assignment 2 :
+
+To create a Global Accelerator with an EC2 instance as an endpoint and a load balancer as another endpoint in a different region, you can follow these steps:
+
+Step 1: Create an EC2 Instance
+1. Sign in to the AWS Management Console and open the EC2 service at https://console.aws.amazon.com/ec2/.
+2. Launch a new EC2 instance in the desired region where you want the endpoint to be.
+3. Configure the instance with the desired specifications and settings.
+4. Once the instance is running, note down its private IP address.
+
+Step 2: Create a Load Balancer
+1. Sign in to the AWS Management Console and open the EC2 service at https://console.aws.amazon.com/ec2/.
+2. Create a load balancer in a different region than the one where the EC2 instance is located.
+3. Configure the load balancer according to your requirements, such as selecting the appropriate load balancer type (e.g., Application Load Balancer or Network Load Balancer) and configuring the listeners and target groups.
+4. Ensure that the load balancer is functioning correctly and routing traffic to the appropriate target.
+
+Step 3: Create a Global Accelerator
+1. Sign in to the AWS Management Console and open the Global Accelerator service at https://console.aws.amazon.com/globalaccelerator/.
+2. Choose "Create accelerator."
+3. Provide a name for the accelerator and select the appropriate AWS Region for the accelerator.
+4. Configure the listener settings for the accelerator, such as choosing the protocol (TCP or UDP) and port range.
+5. Under "Endpoint groups," choose "Add endpoint group."
+6. Configure the endpoint group for the EC2 instance:
+   a. Select the endpoint type as "IP address" or "Instance."
+   b. Enter the private IP address of the EC2 instance you created in Step 1.
+   c. Configure any additional settings as required, such as health checks.
+7. Choose "Add endpoint group" again to create another endpoint group for the load balancer.
+8. Configure the endpoint group for the load balancer:
+   a. Select the appropriate endpoint type based on your load balancer configuration.
+   b. Enter the load balancer's DNS name or IP address.
+   c. Configure any additional settings as required.
+9. Choose "Next" and review the accelerator configuration.
+10. If everything looks correct, choose "Create accelerator" to create the Global Accelerator.
+
+Once the Global Accelerator is created, it will have two endpoint groups—one pointing to the EC2 instance and the other pointing to the load balancer in a different region. 
+The Global Accelerator will route traffic efficiently to the nearest endpoint based on factors like latency, health checks, and AWS global network optimizations.
+
+
+NOTE:: As both these services requires additional cost and does not come under free tier. I will only be attaching the steps and will not be performing in my AWS account.

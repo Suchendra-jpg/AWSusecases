@@ -1,0 +1,35 @@
+Assignment 1 solution:
+
+1) Create an S3 bucket with name 's3assignment1-30'.
+
+2) Upload 5 different type of files into the bucket created in above step.
+
+3) After uploading files, navigate into bucket for verification.
+
+
+Assignment 2 solution:
+
+1) Navigate to properties inside s3 bucket and edit Bucket versioning.
+
+2) Enable bucket versioning and save chnages.
+
+3) Re-upload any 2 files which were uploaded above.(The name of the files should match unlike content which can be different)
+
+4) Navigate inside created bucket and toggle "Show versions" to verify versioning is working as expected.
+
+
+Assignment 3 solution:
+
+1) Enable Static website hosting in the created s3 bucket.
+
+2) Provide index.html and error.html files as requested.
+
+3) Also uncheck block all public access under bucket settings.
+
+4) Edit object ownership and enable ACLs.
+
+5) Upload static website code into S3 bucket.
+
+6) Please make folder which contains code public.
+
+7) Navigate to index.html file and use Object URL to access website hosted using an S3 bucket.

@@ -1,0 +1,158 @@
+Assignment 1 solution:
+
+1) Create a VPC with CIDR block as  192.168.0.0/16.
+
+2) Create 3 subnets with following CIDR ranges which are distinct:
+
+	a) 192.168.0.0/24
+	b) 192.168.1.0/24
+	c) 192.168.3.0/24
+	
+3) All 3 subnets will be private , therefore make one subnet public by enabling 'Auto assign IP' as per problem statement.
+
+4) Create an IGW and attach that to created VPC.
+
+5) Then configure already created route table for VPC, by adding IGW route to it( public-1 subnet).
+
+6) Create two separate 'NAT Gateways' for both of them.(private-1 and private-2)
+
+7) Create two seperate  route tables for both the private subnets. (private-1 and private-2)
+
+8) Add a route to the corresponding NAT Gateway in each private subnet's route tables, with a destination of 0.0.0.0/0.
+
+9) To make the route tables created in above step private route table ->Subnet associations ->Edit Subnet associations ->Select private subnet -> Save association.
+
+
+Assignment 2 solution:
+
+1)	Open the AWS Management Console and navigate to the VPC service.
+	Click on "Your VPCs" in the sidebar.
+	Click on the "Create VPC" button.
+	Provide a name for your VPC, such as "MYVPC1".
+	Specify the IPv4 CIDR block for your VPC (e.g., 10.0.0.0/16).
+	Click on "Create" to create the VPC.
+	Repeat the above steps to create another VPC named "MYVPC2".
+	Create a VPC in the Oregon region (US-West-2):
+
+2)	Open the AWS Management Console and navigate to the VPC service.
+	Ensure that you are in the Oregon region by selecting it from the region selector in the top right corner.
+	Click on "Your VPCs" in the sidebar.
+	Click on the "Create VPC" button.
+	Provide a name for your VPC, such as "VPCOregon1".
+	Specify the IPv4 CIDR block for your VPC (e.g., 10.1.0.0/16).
+	Click on "Create" to create the VPC.
+	Create a peering connection between MYVPC1 and MYVPC2:
+
+3)	In the AWS Management Console, navigate to the VPC service.
+	Click on "Peering Connections" in the sidebar.
+	Click on the "Create Peering Connection" button.
+	Select "Requester" as MYVPC1 and "Accepter" as MYVPC2.
+	Provide a name for the peering connection.
+	Click on "Create Peering Connection".
+	Once the peering connection is created, it will be in a pending state.
+	You will need to accept the peering request in the Accepter VPC (MYVPC2).
+	In the peering connections list, select the peering connection and click on "Actions" > "Accept Request".
+	Create a peering connection between MYVPC2 and VPCOregon1:
+
+4)	In the AWS Management Console, navigate to the VPC service.
+	Click on "Peering Connections" in the sidebar.
+	Click on the "Create Peering Connection" button.
+	Select "Requester" as MYVPC2 and "Accepter" as VPCOregon1.
+	Provide a name for the peering connection.
+
+
+Assignment 3 solution:
+
+1) Launch an EC2 instance named 'Master' with 'master-key-pair.pem' and SG which allows SSH and HTTP inbound rules.
+
+2) Launch another instance named 'Client' with 'client-key-pair.pem' and SG which only allows SSH from Master's SG.
+
+3) Connect to Master instance using EC2 instance connect.
+
+4) To copy the client-key-pair present in local machine to master instance we can perform below operations from powershell/cmd:
+	cd C:\Users\LENOVO\Downloads
+	scp -i master-key-pair.pem client-key-pair.pem ec2-user@3.92.217.244:/home/ec2-user/               //PublicIP:3.92.217.244 (Master)
+
+5) Now you can connect using SSH from master instance to client following below steps:
+	sudo chmod 400 client-key-pair.pem
+	ssh -i client-key-pair.pem ec2-user@172.31.24.190                                                  //PrivateIP:172.31.24.190 (Client)
+	
+	
+Assignment 4 solution:
+
+To create a VPC Endpoint for secure access to an S3 bucket, follow these steps:
+
+1) Log in to the AWS Management Console and open the Amazon VPC service.
+
+2) In the navigation pane, click on "Endpoints" and then click "Create Endpoint."
+
+3) Select your desired VPC from the "VPC" dropdown menu.
+
+4) Under "Service category," choose "S3" as the service.
+
+5) In the "Route tables" section, select the route table(s) associated with your VPC. This determines which subnets can access the S3 bucket through the endpoint.
+	
+6) Under "Policy," you have two options:
+	Full Access: Allows full access to all S3 buckets within the AWS account.
+	Custom: Allows access to specific S3 buckets. Choose this option and specify the ARN (Amazon Resource Name) of the S3 bucket you want to provide access to.
+
+7) Click "Next" to review the endpoint configuration.
+
+8) Review the details and click "Create Endpoint" to create the VPC endpoint.
+
+9) Once the VPC endpoint is created, it provides secure access to the specified S3 bucket within your VPC.Any resources within the associated subnets can access the S3 bucket without requiring internet access or traversing the public internet.
+
+
+Case Study Solution:
+
+1) Create VPC with name 'Production Network' with CIDR range '11.11.0.0/16'.
+
+2) Create subnets for above VPC as per problem statement:
+	a) app1      (11.11.1.0/24)
+	b) app2      (11.11.2.0/24)
+	c) dbcache   (11.11.3.0/24)
+	d) db        (11.11.4.0/24)
+	e) web       (11.11.5.0/24) ->make it public.
+	
+3) Launch 5 instances in 5 different subnets created using same name as their subnets they are launched in with default SG and same key-pair for all instances.
+
+-> IGW is mandatory to create a NAT Gateway in an VPC.
+-> You can make a subnet public by attaching IGW to it.
+-> NAT GW should always be created in a public subnet but attached to private subnet.
+
+4) Create an IGW with name 'Prod-IGW' for VPC created above and attach it.
+
+5) We will require 3 route tables aimed for different purposes:
+	a) 'Prod-web' route table with subnet association of 'web' subnet and also add IGW created to this under "Routes" with "Destination"(0.0.0.0/0)
+	b) 'NAT-prod' route table with subnet association of 'app1' & 'dbcache' subnets.
+		->Create a NAT GW with name 'Production-NAT' inside a public subnet('web').
+		->Add 'Production-NAT' GW to "Routes" under 'NAT-prod' route table with "Destination"(0.0.0.0/0)
+	c) 'Private-prod' route table with subnet associations of 'app2' & 'db' subnets.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+6) Create VPC with name 'Development Network' with CIDR range '20.20.0.0/16'.
+
+7) Create two subnets for above created VPC :
+	a) web   (20.20.1.0/24)
+	b) db    (20.20.2.0/24)
+	
+8) Launch 2 instances in 2 different subnets created using same name as their subnets they are launched in with default SG and same key-pair for all instances.(web-dev & db-dev)
+
+9) Create an IGW 'Dev-IGW' for VPC and attach it.
+
+10) We will require 2 route tables for different purposes:
+	a) 'Web-route' route table with subnet association of 'web' subnet and add IGW 'Dev-IGW' to this under "Routes" with "Destination"(0.0.0.0/0)
+	b) 'Db-route' route table with subnet association of 'db' subnet.
+	
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+11) Create a peering connection between two VPC's created above and accept the request using "Actions" under "Peering connections" from accepter VPC.
+
+12) As we are connecting db subnets of both production network and development network respectively, 
+
+-> Edit route table associated with db subnet of Production Network i.e, 'Private-prod' route table by adding "Destination"(20.20.2.0/24) with "Target"(Peering connection).
+-> Edit route table associated with db subnet of Development Network i.e, 'Db-route' route table by adding "Destination"(11.11.4.0/24) with "Target"(Peering connection).
+
+13) Connect to 'web' instance of 'Production Network' and then connect to 'db' instance using appropriate key-pair and privateip.
+
+14) Connect to 'web-dev' instance of 'Development Network' and then connect to 'db-dev' instance using appropriate key pair and privateip.
+
+15) To check if peering is working as expected ping IP address of 'db' instance from 'db-dev' instance and vice versa for verification.

@@ -1,0 +1,87 @@
+ELB Assignment Solution:
+
+1) Create 3 EC2 instances simultaneously with the below user data and SSH,HTTP as required inbound security rule.
+
+2) User data:
+
+#!/bin/bash
+
+yum update -y 
+yum install httpd -y
+
+systemctl start httpd
+systemctl enable httpd
+
+3)Replace the index.html file in each of instances based on which web page you want to display by removing default index.html page or editing it.
+                             Path:  /var/www/html/index.html
+
+3) To verify if the desired output is available we can paste the Public IPv4 address of all instances created in web browser.
+
+4) Create a classic load balancer with appropriate security group and using above 3 EC2 instances.
+
+5) Navigate to newly created load balancer and copy the "DNS name" of lb and paste it in web browser and you can try refreshing page multiple times.
+													(Traffic is distributed b/n three instances)
+
+6) You can share the DNS name available in load balancer to the end-user rather than sharing IP addresses of EC2 instances which are dynamic IP's.
+
+7) You can also create Application Load Balancer for the same use case and this would require defining "Target Group" of servers working on/having same information.
+	a)Attach EC2 instances created to target group.
+	b)Attach target group created to ALB that you are going to create.
+	
+8) Try pasting the "DNS name" of newly created ALB into browser to verify if it's working as expected.
+
+
+ASG Assignment Solution:
+
+1) Create an  EC2 instances with the below user data and SSH,HTTP as required inbound security rule.
+
+2) User data:
+
+#!/bin/bash
+
+yum update -y  
+yum install apache2 -y
+
+systemctl start apache2
+
+3) Login to instance created and verify that apache2 is installed .
+
+4) Actions -> Images and templates -> Create template from instance.
+
+5) From template created in above step create ASG.
+
+6) You can attach existing LB to ASG while creating an ASG.
+
+7) Also you can configure group size and scaling policies while creating an ASG.(->Group Size [Minimum capacity=1 & Minimum capacity=3])
+
+
+Route53 Assignment Solution:
+
+1) Click on "Create Hosted Zone" to start creating a new hosted zone.
+
+2) In the "Domain Name" field, enter the domain name for your website. 
+
+3) Choose the "Public hosted zone" option since you want to route traffic from the internet.
+
+4) Click on "Create" to create the hosted zone.
+
+5) After the hosted zone is created, note down the four nameservers provided by Route 53. These nameservers need to be updated in your domain registrar's settings.
+   If you registered your domain through Route 53, this step is not required.
+
+6) In the EC2 console, launch an EC2 instance with an Amazon Linux or any other Linux distribution that supports Apache web server.
+
+7) Once the instance is running, note down its public IP address. This IP address will be used to route traffic to the EC2 instance.
+
+8) In the Route 53 console, click on the newly created hosted zone.
+
+9) Click on "Create Record Set" to create a new record set.
+
+10) In the "Name" field, enter the subdomain or leave it blank to map the domain itself.
+
+11) In the "Type" field, select "A - IPv4 address."
+
+12) In the "Value" field, enter the EC2 instance's public IP address.
+
+13) Leave the "TTL" (Time to Live) as default or adjust it as per your requirement.
+
+14) Click on "Create" to create the record set.
